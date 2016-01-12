@@ -36,7 +36,7 @@ function gScrollTop( node )
     ;
 }
 
-function id( x )
+function idf( x )
 {
     return x;
 }
@@ -53,7 +53,7 @@ function qSA( sel, /*?*/node )
 
 /* html getters */
 
-function h( /*string, e.g. 'div' or 'div class="myclass"'*/tname, /*string*/html ) 
+function hh( /*string, e.g. 'div' or 'div class="myclass"'*/tname, /*?string?*/html ) 
 {
     return html
 	?  '<' + tname + '>' + html + '</' + tname.replace( /\s[\S\s].*$/, '' ) + '>'
@@ -100,6 +100,20 @@ function sP( node, propname, value )
 
 /* other */
 
+function and( arr, /*?function?*/testfun )
+{
+    for (var n = arr.length, i = 0; i < n; i++)
+    {
+        var xi = arr[ i ]
+        ,    v = testfun  ?  testfun( xi )  :  xi
+        ;
+	if (!v)
+            break;
+    }
+
+    return v;
+}
+
 function or( arr, /*?function?*/testfun )
 {
     for (var n = arr.length, i = 0; i < n; i++)
@@ -117,12 +131,17 @@ function pad( s, n, c )
     c  ||  (c = ' ');
     'string' === typeof s  ||  (s = '' + s);
 
-    var arr = s.split( '' ).reverse();
-
-    while (arr.length < n)
-	arr.push( c );
-
-    return arr.reverse().join( '' );
+    var missing = Math.round( (n - s.length) / c.length );
+    if (missing > 0)
+    {
+        var arr = arr  ||  s.split( '' ).reverse();
+        while (missing--)
+            arr.push( c );
+    
+        return arr.reverse().join( '' );
+    }
+    
+    return s;
 }
 
 function fun( code )
