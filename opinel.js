@@ -1,9 +1,9 @@
 /*
-A bunch of useful small functions & shortcuts for JavaScript.
-Use at your own risk. See the file ./LICENSE
+  A bunch of useful small functions & shortcuts for JavaScript.
+  Use at your own risk. See the file ./LICENSE
 
-Guillaume Lathoud, 2016
-glat@glat.info
+  Guillaume Lathoud, 2016
+  glat@glat.info
 */
 
 /* getters: pure functions */
@@ -137,23 +137,24 @@ function pad( s, n, c )
         var arr = arr  ||  s.split( '' ).reverse();
         while (missing--)
             arr.push( c );
-    
+        
         return arr.reverse().join( '' );
     }
     
     return s;
 }
 
-function fun( code )
+function fun( /*string*/code )
 {
-    return code in fun  ?  fun[ code ]  :  (fun[ code ] = new Function( 'a', 'b', code ); /* a & b are optional */
+    return code in fun  ?  fun[ code ]  :  (fun[ code ] = new Function( 'a', 'b', code )); /* a & b are optional */
 }
 
-function run( code, /*?*/a, /*?*/b ) 
+function run( /*string*/code, /*?*/a, /*?*/b ) 
 /* a & b are optional */
 {
     return (code in fun  ?  fun[ code ]  :  fun( code ))( a, b );
 }
+
 
 function xhrGetSync( href )
 /* yes, as of 2016 "sync" already deprecated, but still useful for quick test purposes */
