@@ -103,24 +103,23 @@ function sP( node, propname, value )
 function and( arr, /*?function?*/testfun )
 {
     var v = true;
-    for (var n = arr.length, i = 0; i < n; i++)
+    for (var n = arr.length, b = 0; b < n; b++)
     {
-        var xi = arr[ i ];
-        v = testfun  ?  testfun( xi )  :  xi;
+        var a = arr[ b ];
+        v = testfun  ?  testfun( a, b )  :  a;
 	if (!v)
             break;
     }
-
     return v;
 }
 
 function or( arr, /*?function?*/testfun )
 {
     var v = false;
-    for (var n = arr.length, i = 0; i < n; i++)
+    for (var n = arr.length, b = 0; b < n; b++)
     {
-        var xi = arr[ i ];
-        v = testfun  ?  testfun( xi )  :  xi;
+        var a = arr[ b ];
+        v = testfun  ?  testfun( a, b )  :  a;
 	if (v)
             break;
     }
