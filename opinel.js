@@ -100,30 +100,28 @@ function sP( node, propname, value )
 
 /* other */
 
-function and( arr, /*?function?*/testfun )
+function and( arr )
 {
-    var v = true;
+    var a = true;
     for (var n = arr.length, b = 0; b < n; b++)
     {
-        var a = arr[ b ];
-        v = testfun  ?  testfun( a, b )  :  a;
-	if (!v)
+        a = arr[ b ];
+	if (!a)
             break;
     }
-    return v;
+    return a;
 }
 
-function or( arr, /*?function?*/testfun )
+function or( arr )
 {
-    var v = false;
+    var a = false;
     for (var n = arr.length, b = 0; b < n; b++)
     {
         var a = arr[ b ];
-        v = testfun  ?  testfun( a, b )  :  a;
-	if (v)
+	if (a)
             break;
     }
-    return v;
+    return a;
 }
 
 function pad( s, n, c )
