@@ -102,11 +102,11 @@ function sP( node, propname, value )
 
 function and( arr, /*?function?*/testfun )
 {
+    var v = true;
     for (var n = arr.length, i = 0; i < n; i++)
     {
-        var xi = arr[ i ]
-        ,    v = testfun  ?  testfun( xi )  :  xi
-        ;
+        var xi = arr[ i ];
+        v = testfun  ?  testfun( xi )  :  xi;
 	if (!v)
             break;
     }
@@ -116,14 +116,15 @@ function and( arr, /*?function?*/testfun )
 
 function or( arr, /*?function?*/testfun )
 {
+    var v = false;
     for (var n = arr.length, i = 0; i < n; i++)
     {
-        var xi = arr[ i ]
-        ,    v = testfun  ?  testfun( xi )  :  xi
-        ;
+        var xi = arr[ i ];
+        v = testfun  ?  testfun( xi )  :  xi;
 	if (v)
-	    return v;
+            break;
     }
+    return v;
 }
 
 function pad( s, n, c )
