@@ -1,4 +1,6 @@
 /*
+  opinel.js
+
   A bunch of useful small functions & shortcuts for JavaScript.
   Use at your own risk. See the file ./LICENSE
 
@@ -61,9 +63,17 @@ function hh( /*string, e.g. 'div' or 'div class="myclass"'*/tname, /*?string?*/h
     ;
 }
 
-function hDIV( html ) { return h( 'div', html ); }
-function hEM( html )  { return h( 'em', html ); }
-function hP ( html )  { return h( 'p',  html ); }
+/* Note: functions are objects, so we can define convenient shortcuts
+ * e.g. `hh.div( <html> )`, `hh.span( <html> )` etc.
+ */
+[ 'a', 'blockquote', 'button', 'cite', 'code', 'dd', 'div', 'dl', 'dt'
+  , 'em', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+  , 'hr', 'iframe', 'img', 'input', 'li', 'ol', 'option', 'p', 'pre', 
+  , 'select', 'span', 'strong'
+  , 'table', 'td', 'th', 'tr', 'ul' 
+]
+    .forEach( function ( name ) { hh[ name ] = hh.bind( null, name ); } )
+;
 
 /* creators */
 
