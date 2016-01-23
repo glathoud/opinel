@@ -103,6 +103,12 @@ function aEL( node, ename, clientfun, /*?*/capture )
     (node  ||  document).addEventListener( ename, clientfun, capture );
 }
 
+function rA( node, aname, value )
+{
+    node.removeAttribute( aname, value );
+    return node;
+}
+
 function sA( node, aname, value )
 {
     node.setAttribute( aname, value );
