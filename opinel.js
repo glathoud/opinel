@@ -80,12 +80,25 @@ function hh( /*string, e.g. 'div' or 'div class="myclass"'*/tname, /*?string | a
     }
 }
 
+hh.esc = function (s) 
+// If this is used too often, then it is probably better to switch
+// over to js.yak
+{
+    return s
+        .replace( /&/g, '&amp;' )            
+        .replace( /</g, '&lt;' )
+        .replace( />/g, '&gt;' )            
+        .replace( /"/g, '&quot;' )
+        .replace( /'/g, '&apos;' );
+};
+
+
 /* Note: functions are objects, so we can define convenient shortcuts
  * e.g. `hh.div( <html> )`, `hh.span( <html> )` etc.
  */
 [ 'a', 'blockquote', 'button', 'cite', 'code', 'dd', 'div', 'dl', 'dt'
   , 'em', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-  , 'hr', 'iframe', 'img', 'input', 'li', 'ol', 'option', 'p', 'pre', 
+  , 'hr', 'iframe', 'img', 'input', 'li', 'ol', 'option', 'p', 'pre'
   , 'select', 'span', 'strong'
   , 'table', 'td', 'th', 'tr', 'ul' 
 ]
@@ -155,6 +168,47 @@ function or( arr )
             break;
     }
     return a;
+}
+
+function oEquals( a, b )
+{
+    if (a === b) return true;
+
+    var ta = typeof a
+    ,   tb = typeof b
+    ;
+    if (ta !== tb) return false;
+
+    // Basic types 
+
+    if ('number' === ta  && isNaN( a )) return isNaN( b );
+
+    if (ta !== 'object') return a === b;
+    
+    // null objects
+
+    if (a === null  ||  b === null)  return a === b;
+
+    // non-null objects
+
+    var a_is_arr = a instanceof Array
+    ,   b_is_arr = b instanceof Array
+    ;
+    if (a_is_arr !== b_is_arr) return false;
+    
+    if (a_is_arr)
+    {
+        if (a.length !== b.length)  return false;
+        for (var i = a.length; i--;) 
+            if (!oEquals( a[ i ], b[ i ] ))  return false;
+    }
+    else
+    {
+        for (var k in a)  if (!(k in b))  return false;
+        for (var k in b)  if (!(k in a  &&  oEquals( a[ k ], b[ k ] )))  return false;
+    }
+    
+    return true;
 }
 
 function pad( s, n, c )
