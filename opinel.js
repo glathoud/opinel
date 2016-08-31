@@ -115,6 +115,12 @@ function cE( name, /*?*/node )
     return (node  ||  document).createElement( name );
 }
 
+function cTxN( text, /*?*/node )
+{
+    var ret = (node  ||  document).createTextNode( text );
+    return ret;
+}
+
 /* getter-setters */
 
 function gs( pname, obj, code )
@@ -123,6 +129,12 @@ function gs( pname, obj, code )
 }
 
 /* modifiers: setters returning their first parameter */
+
+function aC( node, child )
+{ 
+    node.appendChild( child );
+    return node;
+}
 
 function aEL( node, ename, clientfun, /*?*/capture )
 {
