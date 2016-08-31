@@ -244,6 +244,12 @@ function pad( s, n, c )
     return s;
 }
 
+function parseJS( /*string*/jscode )
+// A bit more flexible than JSON.parse
+{
+    return new Function( 'return ' + jscode )();
+}
+
 function fun( /*string*/code )
 {
     return code in fun  ?  fun[ code ]  :  (fun[ code ] = new Function( 'a', 'b', code )); /* a & b are optional */
