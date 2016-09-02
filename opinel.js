@@ -185,6 +185,15 @@ function or( arr )
     return a;
 }
 
+function oCreateMix( a, b /*, ... more ...*/ )
+// Similar to `oMix`, but does *not* modify `a`.
+// Instead, returns a new object.
+//
+// (purely functional)
+{
+    return oMix.apply( null, [ Object.create( a ) ].concat( Array.prototype.slice.call( arguments, 1 ) ) );
+}
+
 function oEquals( a, b )
 {
     if (a === b) return true;
@@ -224,6 +233,22 @@ function oEquals( a, b )
     }
     
     return true;
+}
+
+function oMix( a, b /*, ... more ... */ )
+// Modify `a` in-place and return it.
+{
+    for (var n = arguments.length
+         , i = 1; i < n; i++)
+    {
+        var other = arguments[ i ];
+        if (other)
+        {
+            for (var k in other)
+                a[ k ] = other[ k ];
+        }
+    }
+    return a;
 }
 
 function pad( s, n, c )
