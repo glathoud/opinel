@@ -333,6 +333,27 @@ function run( /*string*/code, /*?*/a, /*?*/b )
 }
 
 
+function sPad( /*string*/s, /*integer (number of chars): csize>0 for begin-pad, csize<0 for end-pad*/signed_csize, /*?string?*/p )
+{
+    p  ||  (p="0");
+    var end = signed_csize < 0
+    , csize = end  ?  -signed_csize  :  signed_csize
+    ,   out = s + ""
+    ,   pad = sRep( p, Math.ceil( (csize - out.length) / p.length ) )
+    ;
+    return end ? out + pad : pad + out;
+}
+
+function sRep( /*string*/s, /*integer*/n )
+{
+    return n > 1  
+        ?  (s.repeat  ?  s.repeat( n )  :  Array.apply( 0, n ).map( _ => s ).join( '' ))
+        :  n == 1  ?  s
+        :  n == 0  ?  ''
+        :  null
+    ;
+}
+
 function xhrGetSync( href )
 /* yes, as of 2016 "sync" already deprecated, but still useful for quick test purposes */
 {
