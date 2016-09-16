@@ -141,23 +141,48 @@ function aEL( node, ename, clientfun, /*?*/capture )
     (node  ||  document).addEventListener( ename, clientfun, capture );
 }
 
-function rA( node, aname, value )
-{
-    node.removeAttribute( aname, value );
+rA = flexible_name_f_gen( function rA_one_name( node, /*string*/aname ) {
+    node.removeAttribute( aname );
     return node;
+});
+
+function flexible_name_f_gen( f )
+{
+    return flexible_name_f;
+    function flexible_name_f( node, /*string | array | object*/aname /*, ... maybe more params ... */ )
+    {
+        var _emptyObj = {}
+        ,  ret
+        ;
+        
+        if (typeof aname === 'string')
+        {
+            ret = f.apply( this, arguments );            
+        }
+        else
+        {
+            var rest_param = Array.prototype.slice.call( arguments, 2 );
+            
+            if (typeof aname.forEach === 'function')
+                aname.forEach( x => ret = f.apply( this, [ node, x ].concat( rest_param ) ) );
+            else
+                for (var x in aname) { if (!(x in _emptyObj)) {
+                    ret = f.apply( this, [ node, x, aname[ x ] ].concat( rest_param ) );
+                }}
+        }
+        return ret;
+    }
 }
 
-function sA( node, aname, value )
-{
+sA = flexible_name_f_gen( function sA_one_name( node, /*string*/aname, value ) {
     node.setAttribute( aname, value );
     return node;
-}
+});
 
-function sP( node, propname, value )
-{
+sP = flexible_name_f_gen( function sP_one_name( node, /*string*/propname, value ) {
     node[ propname ] = value;
     return node;
-}
+});
 
 /* other */
 
