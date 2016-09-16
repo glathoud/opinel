@@ -130,59 +130,80 @@ function gs( pname, obj, code )
 
 /* modifiers: setters returning their first parameter */
 
-function aC( node, child )
-{ 
+aC = many_arg_f_gen( function aC_one( node, child ) { 
     node.appendChild( child );
     return node;
-}
+});
 
-function aEL( node, ename, clientfun, /*?*/capture )
+rC = many_arg_f_gen( function aC_one( node, child ) { 
+    node.removeChild( child );
+    return node;
+});
+
+function many_arg_f_gen( f )
 {
-    (node  ||  document).addEventListener( ename, clientfun, capture );
-}
+    return many_arg_f;
+    function many_arg_f( a, b )
+    {
+        var ret = f( a, b )
+        ,     n = arguments.length
+        ;
+        if (n > 2)
+        {
+            for (var i = 2; i < n; i++)
+                ret = f( a, arguments[ i ] );
+        }
+        return ret;
+    }
+}    
 
-rA = flexible_name_f_gen( function rA_one_name( node, /*string*/aname ) {
+aEL = flexible_arg1_f_gen( function aEL_one_ename( node, /*string*/ename, clientfun, /*?*/capture ) {
+    (node  ||  document).addEventListener( ename, clientfun, capture );
+});
+
+rA = flexible_arg1_f_gen( function rA_one_name( node, /*string*/aname ) {
     node.removeAttribute( aname );
     return node;
 });
 
-function flexible_name_f_gen( f )
+sA = flexible_arg1_f_gen( function sA_one_name( node, /*string*/aname, value ) {
+    node.setAttribute( aname, value );
+    return node;
+});
+
+sP = flexible_arg1_f_gen( function sP_one_name( node, /*string*/propname, value ) {
+    node[ propname ] = value;
+    return node;
+});
+
+function flexible_arg1_f_gen( f )
 {
-    return flexible_name_f;
-    function flexible_name_f( node, /*string | array | object*/aname /*, ... maybe more params ... */ )
+    return flexible_arg1_f;
+    function flexible_arg1_f( node, /*array | object | basic_type*/arg1 /*, ... maybe more params ... */ )
     {
         var _emptyObj = {}
         ,  ret
         ;
         
-        if (typeof aname === 'string')
-        {
-            ret = f.apply( this, arguments );            
-        }
-        else
+        if (typeof arg1 === 'object')
         {
             var rest_param = Array.prototype.slice.call( arguments, 2 );
             
-            if (typeof aname.forEach === 'function')
-                aname.forEach( x => ret = f.apply( this, [ node, x ].concat( rest_param ) ) );
+            if (typeof arg1.forEach === 'function')
+                arg1.forEach( x => ret = f.apply( this, [ node, x ].concat( rest_param ) ) );
             else
-                for (var x in aname) { if (!(x in _emptyObj)) {
-                    ret = f.apply( this, [ node, x, aname[ x ] ].concat( rest_param ) );
+                for (var x in arg1) { if (!(x in _emptyObj)) {
+                    ret = f.apply( this, [ node, x, arg1[ x ] ].concat( rest_param ) );
                 }}
         }
+        else
+        {
+            ret = f.apply( this, arguments );            
+        }
+
         return ret;
     }
 }
-
-sA = flexible_name_f_gen( function sA_one_name( node, /*string*/aname, value ) {
-    node.setAttribute( aname, value );
-    return node;
-});
-
-sP = flexible_name_f_gen( function sP_one_name( node, /*string*/propname, value ) {
-    node[ propname ] = value;
-    return node;
-});
 
 /* other */
 
