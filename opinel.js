@@ -177,9 +177,8 @@ sA = flexible_arg1_f_gen( function sA_one_name( node, /*string*/aname, value ) {
 
 sP = flexible_arg1_f_gen( function sP_one_name( node, /*string*/propname, value ) {
     
-    var v = '' + value;
-    if (v !== node[ propname ])
-        node[ propname ] = v;
+    if (value !== node[ propname ])
+        node[ propname ] = value;
     
     return node;
 });
