@@ -167,12 +167,20 @@ rA = flexible_arg1_f_gen( function rA_one_name( node, /*string*/aname ) {
 });
 
 sA = flexible_arg1_f_gen( function sA_one_name( node, /*string*/aname, value ) {
-    node.setAttribute( aname, value );
+    
+    var v = '' + value;
+    if (v !== node.getAttribute( aname ))
+        node.setAttribute( aname, v );
+    
     return node;
 });
 
 sP = flexible_arg1_f_gen( function sP_one_name( node, /*string*/propname, value ) {
-    node[ propname ] = value;
+    
+    var v = '' + value;
+    if (v !== node[ propname ])
+        node[ propname ] = v;
+    
     return node;
 });
 
