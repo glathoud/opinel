@@ -41,7 +41,8 @@ function get( /*string | array*/vname, /*?object?*/obj )
 
 function getWait( /*string | array*/vname, /*?object?*/obj, /*?integer?*/interval_ms )
 /*
-  Wait for a value to be `!= null`, as delivered by `get( vname,
+
+  Waits for a value to be `!= null`, as delivered by `get( vname,
 objx)`.
 
 Example:
@@ -49,11 +50,11 @@ Example:
 ```
 getWait( 'a.b.c' )( callback )
 
-function callback( value )
-{
-do_something_with( value );
-}
+function callback( value ) { do_something_with( valuex); } 
 ```
+
+Many callbacks: `getWait( 'a.b.c' )( cb1 )( cb2 )( cb3 )`
+
 */
 {
     obj  ||  (obj = this);
@@ -76,6 +77,28 @@ do_something_with( value );
                 setTimeout( check, interval_ms );
         }
     }
+}
+
+function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?integer?*/interval_ms )
+/*
+
+  Makes sure to have loaded or be loading the script at URL `src`,
+  then returns `getWait( vname, obj, interval_ms)`.
+
+*/
+{
+    if (!get( vname, obj )  &&  !loadWait[ src ])
+    {
+        loadWait[ src ] = 1;
+        aC( document.head
+            , sA( cE( 'script' )
+                  , { type : 'text/javascript'
+                      , src : src
+                    }
+                )
+          );
+    }
+    return getWait( vname, obj, interval_ms );
 }
 
 function gA( aname, /*?*/node )
