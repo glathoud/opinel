@@ -36,7 +36,7 @@ function get( /*string | array*/vname, /*?object?*/obj )
     var arr = vname instanceof Array  ?  vname  :  vname.split( '.' )
     ,     v = obj[ arr[ 0 ] ]
     ;
-    return arr.length < 2  ?  v  :  v != null  &&  get( vname.slice( 1 ), v );
+    return arr.length < 2  ||  v == null  ?  v  :  get( vname.slice( 1 ), v );
 }
 
 function getWait( /*string | array*/vname, /*?object?*/obj, /*?integer?*/interval_ms )
