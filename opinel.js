@@ -50,7 +50,7 @@ Example:
 ```
 getWait( 'a.b.c' )( callback )
 
-function callback( value ) { do_something_with( valuex); } 
+function callback( value ) { do_something_with( value ); } 
 ```
 
 Many callbacks: `getWait( 'a.b.c' )( cb1 )( cb2 )( cb3 )`
