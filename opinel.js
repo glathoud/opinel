@@ -88,7 +88,7 @@ function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?i
 
 */
 {
-    if (!(loadWait[ src ]  &&  get( vname, obj )))
+    if (!loadWait[ src ])
     {
         loadWait[ src ] = 1;
         aC( document.head
