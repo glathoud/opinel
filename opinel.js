@@ -54,6 +54,7 @@ function callback( value ) { do_something_with( value ); }
 ```
 
 Many callbacks: `getWait( 'a.b.c' )( cb1 )( cb2 )( cb3 )`
+(called in a random order).
 
 */
 {
