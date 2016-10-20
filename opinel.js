@@ -10,6 +10,74 @@
 
 /* getters: pure functions */
 
+function get( /*string | array*/vname, /*?object?*/obj )
+/*
+  Get a value within an object, possibly deep (`vname` can be a dotted
+  string).
+
+
+  Example: from a local object
+  
+  `get( 'a.b.c', { a : { b : { c : 42 } } } ) )`
+
+
+  Examples: from the global name space
+
+  ```
+  get( 'a' );
+  get( 'a.b.c' );
+  get( [ 'a' ] );
+  get( [ 'a', 0, 'c' ] );
+  ```
+
+*/
+{
+    obj  ||  (obj = this);
+    var arr = vname instanceof Array  ?  vname  :  vname.split( '.' )
+    ,     v = obj[ arr[ 0 ] ]
+    ;
+    return arr.length < 2  ?  v  :  get( vname.slice( 1 ), v );
+}
+
+function getWait( /*string | array*/vname, /*?object?*/obj, /*?integer?*/interval_ms )
+/*
+  Wait for a value to be `!= null`, as delivered by `get( vname,
+objx)`.
+
+Example:
+
+```
+getWait( 'a.b.c' )( callback )
+
+function callback( value )
+{
+do_something_with( value );
+}
+```
+*/
+{
+    obj  ||  (obj = this);
+    interval_ms != null  ||  (interval_ms = 123);
+
+    return callback_eater;
+
+    function callback_eater( /*function*/callback )
+    {
+        setTimeout( check, 0 );
+
+        return callback_eater; // In case one wants to eat more callbacks
+        
+        function check()
+        {
+            var v = get( vname, obj );
+            if (v != null)
+                callback( v );
+            else
+                setTimeout( check, interval_ms );
+        }
+    }
+}
+
 function gA( aname, /*?*/node )
 {
     return (node  ||  document).getAttribute( aname );
