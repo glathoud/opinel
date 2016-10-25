@@ -222,6 +222,21 @@ function gs( pname, obj, code )
 
 /* modifiers: setters returning their first parameter */
 
+function orphan( node /*... more nodes... */ )
+{
+    for (var n = arguments.length, i = 0; i < n; i++)
+    {
+        var one = arguments[ i ]
+        ,    pN = one.parentNode
+        ;
+        if (pN)
+            pN.removeChild( one );
+    }
+    
+    return node;
+}
+
+
 aC = many_arg_f_gen( function aC_one( node, child ) { 
     node.appendChild( child );
     return node;
