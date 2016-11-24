@@ -10,6 +10,32 @@
 
 /* getters: pure functions */
 
+function gatherWait( /*array of function*/waitArr )
+/*
+ Returns a function( callback ) where the callback is triggered as
+ soon as all `waitArr` are done.
+*/
+{
+    var n = waitArr.length;
+    
+    return eater;
+    
+    function eater( /*function*/callback )
+    {
+        _eat_one( 0, callback );
+
+        return eater; // For multiple callbacks (callback order not guaranteed)
+    }
+    
+    function _eat_one( i, callback )
+    {
+        if (i < n)
+            waitArr[ i ]( () => _eat_one( i+1, callback ) );
+        else
+            callback();
+    }
+}
+
 function get( /*string | array*/vname, /*?object?*/obj )
 /*
   Get a value within an object, possibly deep (`vname` can be a dotted
@@ -86,20 +112,78 @@ function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?i
   Makes sure to have loaded or be loading the script at URL `src`,
   then returns `getWait( vname, obj, interval_ms)`.
 
+  There are three alternative syntaxes to load many at once:
+  
+  `loadWait( <array of [ <src> ]>, <?obj?>, <?interval_ms?>)`
+  (ordered, when <vname> can be derived from <src>)
+
+  `loadWait( <array of [ [<src>, <vname>] ]>, <?obj?>, <?interval_ms?>)`
+  (ordered)
+
+  `loadWait( <object: <<src>: <vname>>>, <?obj?>, <?interval_ms?>)`
+  (not ordered, faster)
+
 */
 {
-    if (!loadWait[ src ])
+    src  ||  null.src_missing;
+    
+    if (src instanceof Array)
     {
-        loadWait[ src ] = 1;
-        aC( document.head
-            , sA( cE( 'script' )
-                  , { type : 'text/javascript'
-                      , src : src
-                    }
-                )
-          );
+        // Alternative syntax to load many at once (ordered): Load
+        // them in the order given by `src`. 
+        
+        var n = src.length;
+        n.toPrecision.call.a;
+        
+        var waitArr = new Array( n );
+        for (var i = n; i--;)
+        {
+            var one = src[ i ];
+            one  ||  null.one_missing;
+            waitArr[ i ] = loadWait( 'string' === typeof one    ?  one   :  one[ 0 ]
+                                     , 'string' === typeof one  ?  null  :  one[ 1 ]
+                                     , obj
+                                     , interval_ms
+                                   );
+        }
+        return gatherWait( waitArr, obj, interval_ms );
     }
-    return getWait( vname, obj, interval_ms );
+    else if ('object' === typeof src)
+    {
+        // Alternative syntax to load many at once (not ordered)
+        var       arr = []
+        ,   _emptyObj = {}
+        ;
+        for (var one_src in obj) { if (!(one_src in _emptyObj)) {
+            var one_vname = obj[ one_src ]  ||  null;
+            arr.push( [ one_src, one_vname ] );
+        }}
+        return loadWait( arr, null, obj, interval_ms );
+    }
+    else if ('string' === typeof src)
+    {
+        // Standard syntax to load a single one
+
+        vname  ||  (vname = src.split( '/' ).slice( -1 )[ 0 ].replace( /\.[^\.]+$/, '' ));
+        
+        if (!loadWait[ src ])
+        {
+            loadWait[ src ] = 1;
+            aC( document.head
+                , sA( cE( 'script' )
+                      , { type : 'text/javascript'
+                          , src : src
+                          , defer : 'defer'  // 'defer' guarantees the same order
+                        }
+                    )
+              );
+        }
+        return getWait( vname, obj, interval_ms );
+    }
+    else
+    {
+        null.unsupported;
+    }
 }
 
 function gA( aname, /*?*/node )
