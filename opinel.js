@@ -65,7 +65,7 @@ function get( /*string | array*/vname, /*?object?*/obj )
     return arr.length < 2  ||  v == null  ?  v  :  get( vname.slice( 1 ), v );
 }
 
-function getWait( /*string | array*/vname, /*?object?*/obj, /*?integer?*/interval_ms )
+function getWait( /*string | array*/vname, /*?object?*/obj, /*?object?*/opt )
 /*
 
   Waits for a value to be `!= null`, as delivered by `get( vname,
@@ -85,14 +85,32 @@ Many callbacks: `getWait( 'a.b.c' )( cb1 )( cb2 )( cb3 )`
 */
 {
     obj  ||  (obj = this);
-    interval_ms != null  ||  (interval_ms = 123);
+    var {
+        interval_ms
+        , message_interval_ms
+    } = oCreateMix(
+        {
+            interval_ms : 123
+            , message_interval_ms : null
+        }
+        , opt
+    );
+    interval_ms != null  ||  (interval_ms = 123);  // mandatory value
+    message_interval_ms != null  &&  isFinite( message_interval_ms );  // optional value
 
+    if (message_interval_ms != null)
+    {
+        var date_start = new Date
+        ,    h_message = setInterval( check_message, message_interval_ms )
+        ;
+    }
+    
     return callback_eater;
 
     function callback_eater( /*function*/callback )
     {
         setTimeout( check, 0 );
-
+        
         return callback_eater; // In case one wants to eat more callbacks
         
         function check()
@@ -104,13 +122,31 @@ Many callbacks: `getWait( 'a.b.c' )( cb1 )( cb2 )( cb3 )`
                 setTimeout( check, interval_ms );
         }
     }
+
+    var i;
+    function check_message()
+    {
+        var found = get( vname, obj )
+        ,   give_up = (5 <= (i = 1 + (i|0)))
+        ;
+        
+        if (found  ||  give_up)
+            clearInterval( h_message );
+
+        if (!found)
+        {
+            console.error( 'getWait: could not find ' + vname + ' after ' + ((new Date - date_start) / 1000) + ' seconds' +
+                           (give_up  ?  '. Stopping reporting about it in the console.'  :  '')
+                         );
+        }
+    }
 }
 
-function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?integer?*/interval_ms )
+function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?object?*/opt )
 /*
 
   Makes sure to have loaded or be loading the script at URL `src`,
-  then returns `getWait( vname, obj, interval_ms)`.
+  then returns `getWait( vname, obj, opt )`.
 
   There are three alternative syntaxes to load many at once:
   
@@ -143,10 +179,10 @@ function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?i
             waitArr[ i ] = loadWait( 'string' === typeof one    ?  one   :  one[ 0 ]
                                      , 'string' === typeof one  ?  null  :  one[ 1 ]
                                      , obj
-                                     , interval_ms
+                                     , opt
                                    );
         }
-        return gatherWait( waitArr, obj, interval_ms );
+        return gatherWait( waitArr );
     }
     else if ('object' === typeof src)
     {
@@ -158,7 +194,7 @@ function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?i
             var one_vname = obj[ one_src ]  ||  null;
             arr.push( [ one_src, one_vname ] );
         }}
-        return loadWait( arr, null, obj, interval_ms );
+        return loadWait( arr, null, obj, opt );
     }
     else if ('string' === typeof src)
     {
@@ -178,7 +214,7 @@ function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?i
                     )
               );
         }
-        return getWait( vname, obj, interval_ms );
+        return getWait( vname, obj, oCreateMix( { message_interval_ms : 4000 }, opt ) );
     }
     else
     {
