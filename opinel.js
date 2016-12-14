@@ -581,7 +581,7 @@ function sPad( /*string*/s, /*integer (number of chars): csize>0 for begin-pad, 
 function sRep( /*string*/s, /*integer*/n )
 {
     return n > 1  
-        ?  (s.repeat  ?  s.repeat( n )  :  Array.apply( 0, n ).map( _ => s ).join( '' ))
+        ?  (s.repeat  ?  s.repeat( n )  :  Array.apply( 0, new Array( n ) ).map( _ => s ).join( '' ))
         :  n == 1  ?  s
         :  n == 0  ?  ''
         :  null
