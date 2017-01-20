@@ -391,6 +391,7 @@ function many_arg_f_gen( f )
 
 aEL = flexible_arg1_f_gen( function aEL_one_ename( node, /*string*/ename, clientfun, /*?*/capture ) {
     (node  ||  document).addEventListener( ename, clientfun, capture );
+    return node;
 });
 
 rA = flexible_arg1_f_gen( function rA_one_name( node, /*string*/aname ) {
