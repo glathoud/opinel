@@ -342,6 +342,11 @@ function gs( pname, obj, code )
 
 /* modifiers: setters returning their first parameter */
 
+function empty( node )
+{
+    node.innerHTML = '';
+}
+
 function orphan( node /*... more nodes... */ )
 {
     for (var n = arguments.length, i = 0; i < n; i++)
