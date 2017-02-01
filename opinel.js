@@ -10,6 +10,11 @@
 
 /* getters: pure functions */
 
+function dflt( /*any*/value, /*any*/dflt_value)
+{
+    return value != null  ?  value  :  dflt_value;
+}
+
 function gatherWait( /*array of function*/waitArr )
 /*
  Returns a function( callback ) where the callback is triggered as
@@ -319,6 +324,17 @@ hh.esc = function (s)
 ]
     .forEach( function ( name ) { hh[ name ] = hh.bind( null, name ); } )
 ;
+
+
+function ofLocationSearch( /*string*/key, /*?any?*/default_value )
+{
+    var maybe_value = (
+        location.search.match( new RegExp( '[\\?&]' + key + '=([^&])+(?:&|$)' ) )
+            ||  []
+    )[ 1 ];
+
+    return dflt( maybe_value, default_value );
+}
 
 /* creators */
 
