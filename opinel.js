@@ -329,7 +329,7 @@ hh.esc = function (s)
 function ofLocationSearch( /*string*/key, /*?any?*/default_value )
 {
     var maybe_value = (
-        location.search.match( new RegExp( '[\\?&]' + key + '=([^&])+(?:&|$)' ) )
+        location.search.match( new RegExp( '[\\?&]' + key + '=([^&]+)(?:&|$)' ) )
             ||  []
     )[ 1 ];
 
