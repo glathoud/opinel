@@ -326,14 +326,36 @@ hh.esc = function (s)
 ;
 
 
-function ofLocationSearch( /*string*/key, /*?any?*/default_value )
+function ofLocationSearch
+(
+    /*string | array [ <key>, <...transform functions...>]*/key_or_arr
+    , /*?any?*/default_value
+)
 {
-    var maybe_value = (
+    var is_str = 'string' === typeof key_or_arr
+    ,      key = is_str  ?  key_or_arr  :  key_or_arr[ 0 ]
+    ,    f_arr = is_str  ?  []  :  key_or_arr.slice( 1 )
+    
+    , maybe_value = (
         location.search.match( new RegExp( '[\\?&]' + key + '=([^&]+)(?:&|$)' ) )
             ||  []
-    )[ 1 ];
+    )[ 1 ]
 
-    return dflt( maybe_value, default_value );
+    ,  value
+    ;
+    if (maybe_value == null)
+    {
+        value = default_value;
+    }
+    else
+    {
+        value = maybe_value;
+
+        for (var n = f_arr.length, i = 0; i < n; i++)
+            value = f_arr[ i ]( value );
+    }
+
+    return value;
 }
 
 /* creators */
