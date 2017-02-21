@@ -177,7 +177,7 @@ function loadWait( /*string*/src, /*string | array*/vname, /*?object?*/obj, /*?o
         n.toPrecision.call.a;
         
         var waitArr = new Array( n );
-        for (var i = n; i--;)
+        for (var i = 0; i < n; ++i)
         {
             var one = src[ i ];
             one  ||  null.one_missing;
