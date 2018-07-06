@@ -180,18 +180,13 @@ var global, exports;
     */
     {
         obj  ||  (obj = this);
-        var {
-            interval_ms
-            , message_interval_ms
-        } = oCreateMix(
-            {
-                interval_ms : 123
-                , message_interval_ms : null
-            }
-            , opt
-        );
-        interval_ms != null  ||  (interval_ms = 123);  // mandatory value
-        message_interval_ms != null  &&  isFinite( message_interval_ms );  // optional value
+        var interval_ms = opt  &&  opt.interval_ms  ||  123
+
+        ,   message_interval_ms =
+            opt  &&  opt.message_interval_ms  ||  null
+        ;
+        message_interval_ms != null
+            &&  isFinite( message_interval_ms );  // optional value
 
         if (message_interval_ms != null)
         {
