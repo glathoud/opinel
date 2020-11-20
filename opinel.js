@@ -447,12 +447,21 @@ var global, exports;
 
     function cE( name, /*?*/node )
     {
-        return (node  ||  document).createElement( name );
+        var ret = document.createElement( name );
+
+        if (node)
+            aC( node, ret );
+
+        return ret;
     }
 
     function cTxN( text, /*?*/node )
     {
-        var ret = (node  ||  document).createTextNode( text );
+        var ret = document.createTextNode( text );
+
+        if (node)
+            aC( node, ret );
+        
         return ret;
     }
 
